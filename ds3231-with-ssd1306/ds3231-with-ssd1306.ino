@@ -66,6 +66,7 @@ void setup() {
   pinMode(RTC_SQW_PIN, INPUT);
   attachInterrupt(digitalPinToInterrupt(RTC_SQW_PIN), clockTick, HIGH);
   /* enable clock square wave interupts */
+  clearAlarms();
   setSqw(true);
 }
 
@@ -94,7 +95,7 @@ void sleepButtonPush() {
 
     /* calculate both current and wakeup time */
     time_t sleepTime = RTC.get();
-    time_t wakeTime = addTime(sleepTime, 60); /* add 60 seconds to sleepTime */
+    time_t wakeTime = addTime(sleepTime, 120); /* add x seconds to sleepTime */
 
     /* display alarm page, set the alarm and put micro-controller to sleep */
     paintAlarmPage(sleepTime, wakeTime);
@@ -159,6 +160,8 @@ void paintAlarmPage( time_t sleepTime, time_t wakeTime ) {
   sprintf(msgString, "W:%s", timeStamp);
   printAtPoint(5, 40, msgString, SSD1306_FONT_SCALE_2, SSD1306_WHITE);
   ssd1306.display();
+  delay(5000); /* wait a little to clear the display before sleeping (to save energy) */
+  paintBlankPage();
 }
 
 /* update the display with the current date/time & clock temp */
