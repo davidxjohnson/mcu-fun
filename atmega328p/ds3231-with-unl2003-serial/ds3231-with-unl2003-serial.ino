@@ -1,3 +1,4 @@
+
 /* Setting system time using RTC, display date/time and clock temp on console.
     Breadboard tested on Nano and Uno R3 with DS3231/AT24C32 Clock Module
       DS3231/AT24C32 Clock Module
@@ -10,6 +11,7 @@
    Library source: https://github.com/JChristensen/DS3232RTC
    Pinout (I2C): SDA/A4, SCL/A5, 5V, GRD */
 #include <DS3232RTC.h>
+DS3232RTC RTC;
 
 /* ---
    RockScream Low Power library
@@ -104,8 +106,8 @@ void sleepButtonPush() {
     /* display alarm page, set the alarm and put micro-controller to sleep */
     motorTurn (STEPPER_STEPS_REQ);
     showAlarmNotice(sleepTime, wakeTime);
-    RTC.setAlarm(ALM1_MATCH_HOURS, minute(wakeTime), hour(wakeTime), 1);
-    RTC.alarmInterrupt(ALARM_1, true);
+    RTC.setAlarm(DS3232RTC::ALM1_MATCH_HOURS, minute(wakeTime), hour(wakeTime), 1);
+    RTC.alarmInterrupt(DS3232RTC::ALARM_1, true);
     sleepForever();
 
     /* interrupt takes micro-controller out of sleep */
@@ -134,16 +136,16 @@ time_t addTime( time_t sleepTime, int seconds) {
 
 /* reset alarms, disable alarm interrupts */
 void clearAlarms() {
-  RTC.alarm(ALARM_1); /* Returns true/false for given alarm if it has been triggered; resets the alarm flag bit. */
-  RTC.alarm(ALARM_2);
-  RTC.alarmInterrupt(ALARM_1, false); /* Enable or disable an alarm "interrupt" which asserts the INT pin on the RTC. */
-  RTC.alarmInterrupt(ALARM_2, false);
+  RTC.alarm(DS3232RTC::ALARM_1); /* Returns true/false for given alarm if it has been triggered; resets the alarm flag bit. */
+  RTC.alarm(DS3232RTC::ALARM_2);
+  RTC.alarmInterrupt(DS3232RTC::ALARM_1, false); /* Enable or disable an alarm "interrupt" which asserts the INT pin on the RTC. */
+  RTC.alarmInterrupt(DS3232RTC::ALARM_2, false);
 }
 
 /* enable/disable 1Hz square wave signal from RTC */
 void setSqw(bool enable) {
-  if (enable) RTC.squareWave(SQWAVE_1_HZ);
-  else RTC.squareWave(SQWAVE_NONE);
+  if (enable) RTC.squareWave(DS3232RTC::SQWAVE_1_HZ);
+  else RTC.squareWave(DS3232RTC::SQWAVE_NONE);
 }
 
 /* prints alarm notice message */

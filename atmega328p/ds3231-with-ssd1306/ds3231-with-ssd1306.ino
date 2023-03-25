@@ -7,13 +7,16 @@
 
 /* ---
    Arduino DS3232RTC Library
+   Version 2.0
    Device specs: https://datasheets.maximintegrated.com/en/ds/DS3231.pdf
    Library source: https://github.com/JChristensen/DS3232RTC
    Pinout (I2C): SDA/A4, SCL/A5, 5V, GRD */
 #include <DS3232RTC.h>
+DS3232RTC RTC;
 
 /* ---
    Adafruit OLED Library for Monochrome OLEDs based on SSD1306 drivers
+   Version 2.5.7
    Device specs: https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf
    Library source: https://github.com/adafruit/Adafruit_SSD1306
    Pinout (I2C): SDA/A4, SCL/A5, 5V, GRD */
@@ -45,8 +48,11 @@ uint8_t currentSqwState = HIGH, lastSqwState = HIGH; /* values set by interrupt 
 volatile bool displayRefreshNeeded = false;
 unsigned long lastSleepButtonPush = millis();
 
+
 void setup() {
   Serial.begin(115200);
+  RTC.begin();
+  
   setSyncProvider(RTC.get);   // set system time (get from the RTC)
   if (timeStatus() != timeSet)
     Serial.println("Unable to sync with the RTC.");
@@ -99,8 +105,8 @@ void sleepButtonPush() {
 
     /* display alarm page, set the alarm and put micro-controller to sleep */
     paintAlarmPage(sleepTime, wakeTime);
-    RTC.setAlarm(ALM1_MATCH_HOURS, minute(wakeTime), hour(wakeTime), 1);
-    RTC.alarmInterrupt(ALARM_1, true);
+    RTC.setAlarm(DS3232RTC::ALM1_MATCH_HOURS, minute(wakeTime), hour(wakeTime), 1);
+    RTC.alarmInterrupt(DS3232RTC::ALARM_1, true);
     sleepForever();
 
     /* interrupt takes micro-controller out of sleep */
@@ -124,16 +130,16 @@ time_t addTime( time_t sleepTime, int seconds) {
 
 /* reset alarms, disable alarm interrupts */
 void clearAlarms() {
-  RTC.alarm(ALARM_1); /* Returns true/false for given alarm if it has been triggered; resets the alarm flag bit. */
-  RTC.alarm(ALARM_2);
-  RTC.alarmInterrupt(ALARM_1, false); /* Enable or disable an alarm "interrupt" which asserts the INT pin on the RTC. */
-  RTC.alarmInterrupt(ALARM_2, false);
+  RTC.alarm(DS3232RTC::ALARM_1); /* Returns true/false for given alarm if it has been triggered; resets the alarm flag bit. */
+  RTC.alarm(DS3232RTC::ALARM_2);
+  RTC.alarmInterrupt(DS3232RTC::ALARM_1, false); /* Enable or disable an alarm "interrupt" which asserts the INT pin on the RTC. */
+  RTC.alarmInterrupt(DS3232RTC::ALARM_2, false);
 }
 
 /* enable/disable 1Hz square wave signal from RTC */
 void setSqw(bool enable) {
-  if (enable) RTC.squareWave(SQWAVE_1_HZ);
-  else RTC.squareWave(SQWAVE_NONE);
+  if (enable) RTC.squareWave(DS3232RTC::SQWAVE_1_HZ);
+  else RTC.squareWave(DS3232RTC::SQWAVE_NONE);
 }
 
 /* clear the oled display */
