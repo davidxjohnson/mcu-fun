@@ -7,7 +7,7 @@
 
 /* ---
    Arduino DS3232RTC Library
-   Version 2.0
+   Version 2.0.1
    Device specs: https://datasheets.maximintegrated.com/en/ds/DS3231.pdf
    Library source: https://github.com/JChristensen/DS3232RTC
    Pinout (I2C): SDA/A4, SCL/A5, 5V, GRD */
@@ -30,8 +30,9 @@ DS3232RTC RTC;
 Adafruit_SSD1306 ssd1306(SSD1306_WIDTH, SSD1306_HEIGHT, &Wire, SSD1306_RESET); /* initialize OLED display driver */
 
 /* ---
-   RockScream Low Power library
-   Library source: https://github.com/rocketscream/Low-Power */
+   Low Power Lab
+   Version: 2.2.0 
+   Library source: https://github.com/LowPowerLab/LowPower */
 #include "LowPower.h"
 
 /* ---

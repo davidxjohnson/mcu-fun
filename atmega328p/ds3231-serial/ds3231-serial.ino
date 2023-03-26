@@ -14,8 +14,9 @@
 DS3232RTC RTC;
 
 /* ---
-   RockScream Low Power library
-   Library source: https://github.com/rocketscream/Low-Power */
+   Low Power Lab
+   Version: 2.2.0 
+   Library source: https://github.com/LowPowerLab/LowPower */
 #include "LowPower.h"
 
 /* ---
